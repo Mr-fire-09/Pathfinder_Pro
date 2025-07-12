@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pathfinder Pro - Dynamic Tech Roadmaps</title> <!-- Updated Website Name -->
+    <title>Pathfinder Pro - Dynamic Tech Roadmaps & Resume Builder</title> <!-- Updated Website Name -->
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts - Inter -->
@@ -42,6 +42,7 @@
             transform: translateY(20px);
             animation: fadeInCard 1s ease-out forwards;
             animation-delay: 0.2s; /* Delay card animation slightly */
+            width: 100%; /* Ensure it takes full width of max-w-4xl */
         }
 
         .glowing-container::before {
@@ -101,7 +102,7 @@
         }
 
         /* Roadmap Card Styling */
-        .roadmap-card {
+        .roadmap-card, .resume-save-card {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -116,7 +117,7 @@
             border: 1px solid transparent; /* For hover effect */
         }
 
-        .roadmap-card:hover {
+        .roadmap-card:hover, .resume-save-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
             background-color: #4a5568; /* Slightly lighter on hover */
@@ -178,6 +179,9 @@
             display: none; /* Hidden by default */
             opacity: 0;
             transition: opacity 0.8s ease-out;
+            flex-direction: column; /* Changed to column for navigation */
+            align-items: center; /* Center content horizontally */
+            width: 100%; /* Take full width */
         }
 
         #main-content.visible {
@@ -329,6 +333,71 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            width: 100%;
+            max-width: 4xl; /* Match glowing-container width */
+        }
+
+        .nav-tab {
+            background-color: #374151;
+            color: #e2e8f0;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            font-weight: bold;
+            margin: 0 0.5rem;
+        }
+
+        .nav-tab:hover {
+            background-color: #4a5568;
+        }
+
+        .nav-tab.active {
+            background-color: #fbbf24;
+            color: #1a202c;
+        }
+
+        /* Section visibility */
+        .content-section {
+            display: none;
+            width: 100%;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Resume List Styling */
+        .resume-list-item {
+            background-color: #374151;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s ease;
+        }
+        .resume-list-item:hover {
+            background-color: #4a5568;
+        }
+        .resume-list-item button {
+            background-color: #ef4444; /* Red for delete */
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            transition: background-color 0.2s ease;
+        }
+        .resume-list-item button:hover {
+            background-color: #dc2626;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -349,8 +418,15 @@
     </div>
 
     <!-- Main Content (Initially Hidden) -->
-    <div id="main-content" class="w-full h-full flex justify-center items-center">
-        <div class="glowing-container w-full max-w-4xl p-8 sm:p-10 md:p-12 space-y-8 text-center">
+    <div id="main-content" class="w-full h-full flex flex-col items-center">
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button id="roadmapTab" class="nav-tab active">Roadmaps</button>
+            <button id="resumeTab" class="nav-tab">Resume Builder</button>
+        </div>
+
+        <!-- Roadmap Section -->
+        <div id="roadmapSection" class="glowing-container p-8 sm:p-10 md:p-12 space-y-8 text-center content-section active">
             <h1 class="text-4xl sm:text-5xl font-extrabold text-golden-highlight leading-tight animate-fade-in-up" style="animation-delay: 0.4s;">
                 Explore Your Tech Journey
             </h1>
@@ -438,9 +514,65 @@
                     <p class="text-gray-400 text-sm mt-1">Core Java, Spring Boot, Android Dev</p>
                 </div>
             </div>
+        </div>
 
-            <!-- About Me Section -->
-            <div class="mt-8 pt-4 border-t border-gray-700">
+        <!-- Resume Builder Section -->
+        <div id="resumeSection" class="glowing-container p-8 sm:p-10 md:p-12 space-y-8 text-center content-section">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-golden-highlight leading-tight">
+                Build Your Professional Resume
+            </h1>
+            <h2 class="text-xl sm:text-2xl text-gray-300">
+                Generate a tailored resume with AI assistance.
+            </h2>
+            <p class="text-gray-400 text-base sm:text-lg leading-relaxed">
+                Provide your details below to generate a dynamic resume. You can then save it and view your past resumes.
+            </p>
+
+            <div class="space-y-4 text-left">
+                <div>
+                    <label for="resumeName" class="block text-gray-300 text-sm font-bold mb-2">Your Full Name:</label>
+                    <input type="text" id="resumeName" placeholder="e.g., John Doe" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-200">
+                </div>
+                <div>
+                    <label for="desiredRole" class="block text-gray-300 text-sm font-bold mb-2">Desired Role:</label>
+                    <input type="text" id="desiredRole" placeholder="e.g., Software Engineer" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-200">
+                </div>
+                <div>
+                    <label for="keySkills" class="block text-gray-300 text-sm font-bold mb-2">Key Skills (comma-separated):</label>
+                    <input type="text" id="keySkills" placeholder="e.g., Python, JavaScript, AWS, React" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-200">
+                </div>
+                <div>
+                    <label for="experienceSummary" class="block text-gray-300 text-sm font-bold mb-2">Experience Summary:</label>
+                    <textarea id="experienceSummary" rows="4" placeholder="Briefly describe your work experience and achievements." class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-200"></textarea>
+                </div>
+                <button id="generateResumeButton" class="w-full p-3 rounded-md text-lg sm:text-xl font-bold bg-yellow-500 text-gray-900 hover:bg-yellow-400 transition duration-200">
+                    Generate Resume
+                </button>
+            </div>
+
+            <div id="resumeOutputArea" class="mt-8">
+                <div class="loading-spinner" id="resumeLoadingSpinner"></div>
+                <p id="resumeMessage" class="text-gray-400 text-center mb-4"></p>
+                <div id="generatedResumeContent" class="roadmap-modal-body text-gray-200 border border-gray-600 rounded-md p-4" style="display: none;">
+                    <!-- Generated resume will be displayed here -->
+                </div>
+                <button id="saveResumeButton" class="w-full p-2 mt-4 rounded-md font-bold bg-green-600 text-white hover:bg-green-500 transition duration-200" style="display: none;">
+                    Save Resume
+                </button>
+            </div>
+
+            <div class="mt-8 pt-4 border-t border-gray-700 text-left">
+                <h3 class="text-xl font-bold text-golden-highlight mb-4">My Saved Resumes</h3>
+                <div id="savedResumesList">
+                    <!-- Saved resumes will be listed here -->
+                    <p class="text-gray-400" id="noResumesMessage">No resumes saved yet.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Me Section -->
+        <div class="glowing-container w-full max-w-4xl p-8 sm:p-10 md:p-12 space-y-8 text-center mt-8">
+            <div class="pt-4 border-t border-gray-700">
                 <button id="toggleAboutMe" class="text-yellow-400 hover:text-yellow-300 transition duration-200 text-sm focus:outline-none">
                     Learn More About the Creator
                 </button>
@@ -477,16 +609,81 @@
         const enterSiteButton = document.getElementById('enterSiteButton');
         const toggleAboutMeButton = document.getElementById('toggleAboutMe');
         const aboutMeContent = document.getElementById('aboutMeContent');
-        const roadmapCards = document.querySelectorAll('.roadmap-card');
         const userNameInput = document.getElementById('userNameInput');
 
-        // Modal elements
+        // Navigation elements
+        const roadmapTab = document.getElementById('roadmapTab');
+        const resumeTab = document.getElementById('resumeTab');
+        const roadmapSection = document.getElementById('roadmapSection');
+        const resumeSection = document.getElementById('resumeSection');
+
+        // Roadmap elements
+        const roadmapCards = document.querySelectorAll('.roadmap-card');
         const roadmapModalOverlay = document.getElementById('roadmapModalOverlay');
         const closeRoadmapModalButton = document.getElementById('closeRoadmapModal');
         const modalRoadmapTitle = document.getElementById('modalRoadmapTitle');
         const modalLoadingSpinner = document.getElementById('modalLoadingSpinner');
         const modalRoadmapMessage = document.getElementById('modalRoadmapMessage');
         const modalGeneratedRoadmapContent = document.getElementById('modalGeneratedRoadmapContent');
+
+        // Resume elements
+        const resumeNameInput = document.getElementById('resumeName');
+        const desiredRoleInput = document.getElementById('desiredRole');
+        const keySkillsInput = document.getElementById('keySkills');
+        const experienceSummaryInput = document.getElementById('experienceSummary');
+        const generateResumeButton = document.getElementById('generateResumeButton');
+        const resumeOutputArea = document.getElementById('resumeOutputArea');
+        const resumeLoadingSpinner = document.getElementById('resumeLoadingSpinner');
+        const resumeMessage = document.getElementById('resumeMessage');
+        const generatedResumeContent = document.getElementById('generatedResumeContent');
+        const saveResumeButton = document.getElementById('saveResumeButton');
+        const savedResumesList = document.getElementById('savedResumesList');
+        const noResumesMessage = document.getElementById('noResumesMessage');
+
+        // --- Utility Functions ---
+
+        // Basic Markdown to HTML conversion for displaying LLM output
+        function formatMarkdownToHtml(markdown) {
+            let html = markdown
+                .replace(/^### (.*$)/gim, '<h3>$1</h3>') // H3
+                .replace(/^## (.*$)/gim, '<h2>$1</h2>')   // H2
+                .replace(/^# (.*$)/gim, '<h1>$1</h1>')    // H1
+                .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>') // Bold
+                .replace(/\*(.*?)\*/gim, '<em>$1</em>') // Italic
+                .replace(/`(.*?)`/gim, '<code>$1</code>') // Inline code
+                .replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2" target="_blank" class="text-blue-400 hover:underline">$1</a>'); // Links
+
+            // Process lists and paragraphs more carefully to avoid issues with <br>
+            let lines = html.split('\n');
+            let formattedLines = [];
+            let inList = false;
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (line.match(/^\d+\.\s/) || line.match(/^[\*\-]\s/)) { // Check for ordered or unordered list item
+                    if (!inList) {
+                        formattedLines.push(line.match(/^\d+\.\s/) ? '<ol class="list-decimal list-inside ml-4">' : '<ul class="list-disc list-inside ml-4">');
+                        inList = true;
+                    }
+                    formattedLines.push(`<li>${line.substring(line.indexOf(' ') + 1)}</li>`);
+                } else {
+                    if (inList) {
+                        formattedLines.push(line.match(/^\d+\.\s/) ? '</ol>' : '</ul>');
+                        inList = false;
+                    }
+                    if (line) { // Only add if line is not empty after trim
+                        formattedLines.push(`<p>${line}</p>`);
+                    }
+                }
+            });
+            if (inList) { // Close any open list at the end
+                formattedLines.push(lines[lines.length - 1].match(/^\d+\.\s/) ? '</ol>' : '</ul>');
+            }
+
+            return formattedLines.join('');
+        }
+
+        // --- Welcome Page & Navigation Logic ---
 
         // Event listener for the "Get Started" button on the welcome page
         enterSiteButton.addEventListener('click', function() {
@@ -503,6 +700,30 @@
                 toggleAboutMeButton.textContent = 'Learn More About the Creator';
             }
         });
+
+        // Tab switching logic
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            if (sectionId === 'roadmapSection') {
+                roadmapTab.classList.add('active');
+            } else if (sectionId === 'resumeSection') {
+                resumeTab.classList.add('active');
+            }
+        }
+
+        roadmapTab.addEventListener('click', () => showSection('roadmapSection'));
+        resumeTab.addEventListener('click', () => showSection('resumeSection'));
+
+        // --- Roadmap Generation Logic ---
 
         // Close roadmap modal
         closeRoadmapModalButton.addEventListener('click', function() {
@@ -528,7 +749,7 @@
             chatHistory.push({ role: "user", parts: [{ text: prompt }] });
 
             const payload = { contents: chatHistory };
-            const apiKey = ""; // Canvas will automatically provide the API key at runtime
+            const apiKey = "AIzaSyCJd1cZx6kVz8SxszTulsuyoFvnWuw7xbc"; // API Key added here
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
             try {
@@ -579,45 +800,171 @@
             });
         });
 
-        // Basic Markdown to HTML conversion for displaying LLM output
-        function formatMarkdownToHtml(markdown) {
-            let html = markdown
-                .replace(/^### (.*$)/gim, '<h3>$1</h3>') // H3
-                .replace(/^## (.*$)/gim, '<h2>$1</h2>')   // H2
-                .replace(/^# (.*$)/gim, '<h1>$1</h1>')    // H1
-                .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>') // Bold
-                .replace(/\*(.*?)\*/gim, '<em>$1</em>') // Italic
-                .replace(/`(.*?)`/gim, '<code>$1</code>') // Inline code
-                .replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2" target="_blank" class="text-blue-400 hover:underline">$1</a>'); // Links
+        // --- Resume Builder Logic ---
 
-            // Process lists and paragraphs more carefully to avoid issues with <br>
-            let lines = html.split('\n');
-            let formattedLines = [];
-            let inList = false;
+        // Load resumes from localStorage on page load
+        document.addEventListener('DOMContentLoaded', loadResumes);
 
-            lines.forEach(line => {
-                line = line.trim();
-                if (line.match(/^\d+\.\s/) || line.match(/^[\*\-]\s/)) { // Check for ordered or unordered list item
-                    if (!inList) {
-                        formattedLines.push(line.match(/^\d+\.\s/) ? '<ol class="list-decimal list-inside ml-4">' : '<ul class="list-disc list-inside ml-4">');
-                        inList = true;
-                    }
-                    formattedLines.push(`<li>${line.substring(line.indexOf(' ') + 1)}</li>`);
-                } else {
-                    if (inList) {
-                        formattedLines.push(line.match(/^\d+\.\s/) ? '</ol>' : '</ul>');
-                        inList = false;
-                    }
-                    if (line) { // Only add if line is not empty after trim
-                        formattedLines.push(`<p>${line}</p>`);
-                    }
-                }
-            });
-            if (inList) { // Close any open list at the end
-                formattedLines.push(lines[lines.length - 1].match(/^\d+\.\s/) ? '</ol>' : '</ul>');
+        async function generateResume() {
+            const name = resumeNameInput.value.trim();
+            const role = desiredRoleInput.value.trim();
+            const skills = keySkillsInput.value.trim();
+            const experience = experienceSummaryInput.value.trim();
+
+            if (!name || !role || !skills || !experience) {
+                resumeMessage.textContent = 'Please fill in all resume fields to generate.';
+                resumeMessage.className = 'text-red-400 text-center mb-4';
+                return;
             }
 
-            return formattedLines.join('');
+            resumeLoadingSpinner.classList.add('active');
+            generatedResumeContent.style.display = 'none'; // Hide previous content
+            saveResumeButton.style.display = 'none'; // Hide save button
+            resumeMessage.textContent = 'Generating your resume...';
+            resumeMessage.className = 'text-gray-400 text-center mb-4';
+
+            const prompt = `Generate a professional resume in Markdown format for ${name}.
+            Desired Role: ${role}
+            Key Skills: ${skills}
+            Experience Summary: ${experience}
+
+            Include sections like:
+            - Contact Information (placeholder for email/phone)
+            - Summary/Objective
+            - Skills
+            - Experience (based on summary, expand if possible)
+            - Education (placeholder)
+            - Projects (placeholder)
+
+            Ensure it's concise, impactful, and uses strong action verbs.`;
+
+            let chatHistory = [];
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+            const payload = { contents: chatHistory };
+            const apiKey = "AIzaSyCJd1cZx6kVz8SxszTulsuyoFvnWuw7xbc"; // API Key added here
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('API Error (Resume):', response.status, response.statusText, errorText);
+                    resumeMessage.textContent = `Error: Failed to generate resume. Status: ${response.status}. Please try again.`;
+                    generatedResumeContent.style.display = 'none';
+                    saveResumeButton.style.display = 'none';
+                    resumeLoadingSpinner.classList.remove('active');
+                    return;
+                }
+
+                const result = await response.json();
+                resumeLoadingSpinner.classList.remove('active');
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    generatedResumeContent.innerHTML = formatMarkdownToHtml(text);
+                    generatedResumeContent.style.display = 'block'; // Show generated content
+                    saveResumeButton.style.display = 'block'; // Show save button
+                    resumeMessage.textContent = 'Resume generated successfully!';
+                    resumeMessage.className = 'text-green-400 text-center mb-4';
+                } else {
+                    resumeMessage.textContent = 'Could not generate the resume. The API response was empty or malformed.';
+                    generatedResumeContent.style.display = 'none';
+                    saveResumeButton.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API (Resume):', error);
+                resumeLoadingSpinner.classList.remove('active');
+                resumeMessage.textContent = 'An error occurred while generating the resume. Please check your network connection or try again later.';
+                generatedResumeContent.style.display = 'none';
+                saveResumeButton.style.display = 'none';
+            }
+        }
+
+        generateResumeButton.addEventListener('click', generateResume);
+
+        function saveResume() {
+            const resumeContent = generatedResumeContent.innerHTML;
+            const resumeTitle = `${desiredRoleInput.value.trim()} Resume - ${resumeNameInput.value.trim() || 'Untitled'}`;
+            const resumes = JSON.parse(localStorage.getItem('savedResumes') || '[]');
+            const newResume = {
+                id: Date.now(), // Simple unique ID
+                title: resumeTitle,
+                content: resumeContent
+            };
+            resumes.push(newResume);
+            localStorage.setItem('savedResumes', JSON.stringify(resumes));
+            loadResumes(); // Refresh the list
+            resumeMessage.textContent = 'Resume saved successfully!';
+            resumeMessage.className = 'text-green-400 text-center mb-4';
+        }
+
+        saveResumeButton.addEventListener('click', saveResume);
+
+        function loadResumes() {
+            const resumes = JSON.parse(localStorage.getItem('savedResumes') || '[]');
+            savedResumesList.innerHTML = ''; // Clear current list
+
+            if (resumes.length === 0) {
+                noResumesMessage.style.display = 'block';
+            } else {
+                noResumesMessage.style.display = 'none';
+                resumes.forEach(resume => {
+                    const listItem = document.createElement('div');
+                    listItem.className = 'resume-list-item';
+                    listItem.innerHTML = `
+                        <span class="text-white font-semibold">${resume.title}</span>
+                        <div>
+                            <button data-id="${resume.id}" class="view-resume-btn bg-blue-600 hover:bg-blue-500 mr-2">View</button>
+                            <button data-id="${resume.id}" class="delete-resume-btn bg-red-600 hover:bg-red-500">Delete</button>
+                        </div>
+                    `;
+                    savedResumesList.appendChild(listItem);
+                });
+
+                // Add event listeners for new view/delete buttons
+                document.querySelectorAll('.view-resume-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const resumeId = parseInt(this.dataset.id);
+                        viewResume(resumeId);
+                    });
+                });
+
+                document.querySelectorAll('.delete-resume-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const resumeId = parseInt(this.dataset.id);
+                        deleteResume(resumeId);
+                    });
+                });
+            }
+        }
+
+        function viewResume(id) {
+            const resumes = JSON.parse(localStorage.getItem('savedResumes') || '[]');
+            const resumeToView = resumes.find(r => r.id === id);
+            if (resumeToView) {
+                roadmapModalOverlay.classList.add('visible'); // Reuse roadmap modal for viewing
+                modalRoadmapTitle.textContent = resumeToView.title;
+                modalGeneratedRoadmapContent.innerHTML = resumeToView.content;
+                modalLoadingSpinner.classList.remove('active');
+                modalRoadmapMessage.textContent = '';
+            }
+        }
+
+        function deleteResume(id) {
+            let resumes = JSON.parse(localStorage.getItem('savedResumes') || '[]');
+            resumes = resumes.filter(r => r.id !== id);
+            localStorage.setItem('savedResumes', JSON.stringify(resumes));
+            loadResumes(); // Refresh the list
+            resumeMessage.textContent = 'Resume deleted successfully!';
+            resumeMessage.className = 'text-green-400 text-center mb-4';
         }
     </script>
 </body>
