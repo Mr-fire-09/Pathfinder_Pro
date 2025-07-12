@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathfinder Pro - Dynamic Tech Roadmaps</title> <!-- Updated Website Name -->
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a202c, #2d3748, #1a202c); /* Subtle gradient background */
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite; /* Animated background */
+            color: #e2e8f0; /* Equivalent to text-gray-200 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px; /* Add some padding for smaller screens */
+            box-sizing: border-box; /* Ensure padding doesn't cause overflow */
+            overflow-x: hidden; /* Prevent horizontal scroll on animations */
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Custom glow effect for the card container */
+        .glowing-container {
+            position: relative;
+            background-color: #2d3748; /* Equivalent to bg-gray-800 */
+            border-radius: 1rem; /* Equivalent to rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Default shadow */
+            overflow: hidden; /* Important for containing the pseudo-element glow */
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInCard 1s ease-out forwards;
+            animation-delay: 0.2s; /* Delay card animation slightly */
+        }
+
+        .glowing-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg at 50% 50%, #fbbf24 0%, #fcd34d 20%, transparent 50%, transparent 100%); /* Golden gradient */
+            animation: rotate 8s linear infinite;
+            opacity: 0.3; /* Subtle glow */
+            filter: blur(40px); /* Soften the glow */
+            z-index: -1; /* Place behind content */
+        }
+
+        .glowing-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #2d3748; /* Re-apply background to mask glow over content */
+            border-radius: 1rem;
+            z-index: 0; /* Place above the glow, below content */
+        }
+
+        .glowing-container > * {
+            position: relative;
+            z-index: 1; /* Ensure content is above the glow and mask */
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInCard {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Entrance animations for content elements */
+        .animate-fade-in-up {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Golden highlight for heading */
+        .text-golden-highlight {
+            color: #fbbf24; /* A nice golden yellow */
+        }
+
+        /* Roadmap Card Styling */
+        .roadmap-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            background-color: #374151; /* Darker gray for cards */
+            border-radius: 0.75rem; /* Rounded corners */
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid transparent; /* For hover effect */
+        }
+
+        .roadmap-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            background-color: #4a5568; /* Slightly lighter on hover */
+            border-color: #fbbf24; /* Golden border on hover */
+        }
+
+        .roadmap-card-icon {
+            font-size: 2.5rem; /* Large icon size */
+            margin-bottom: 0.75rem;
+            color: #fbbf24; /* Golden icon color */
+        }
+
+        .roadmap-card-title {
+            font-weight: bold;
+            font-size: 1.125rem; /* lg text */
+            color: #e2e8f0;
+        }
+
+        /* About Me section styling */
+        .about-me-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
+            opacity: 0;
+        }
+
+        .about-me-content.open {
+            max-height: 300px; /* Adjust based on content height */
+            opacity: 1;
+        }
+
+        /* Welcome Page Specific Styles */
+        #welcome-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a202c, #2d3748, #1a202c);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100; /* Ensure it's on top */
+            opacity: 1;
+            transition: opacity 0.8s ease-out;
+            padding-bottom: 60px; /* Add padding for creator name at bottom */
+            box-sizing: border-box;
+        }
+
+        #welcome-page.hidden {
+            opacity: 0;
+            pointer-events: none; /* Disable interactions when hidden */
+        }
+
+        #main-content {
+            display: none; /* Hidden by default */
+            opacity: 0;
+            transition: opacity 0.8s ease-out;
+        }
+
+        #main-content.visible {
+            display: flex; /* Or block, depending on layout */
+            opacity: 1;
+        }
+
+        .welcome-title {
+            font-size: 3rem; /* Larger for welcome */
+            font-weight: bold;
+            color: #fbbf24;
+            text-shadow: 0 0 15px rgba(251, 191, 36, 0.5); /* Subtle glow */
+            animation: pulse 2s infinite alternate; /* Pulsing effect */
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+
+        .welcome-button {
+            margin-top: 40px;
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            background-color: #fbbf24;
+            color: #1a202c;
+            border-radius: 9999px; /* Fully rounded */
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(251, 191, 36, 0.3);
+        }
+
+        .welcome-button:hover {
+            background-color: #fcd34d;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(251, 191, 36, 0.5);
+        }
+
+        .welcome-creator-name {
+            position: absolute;
+            bottom: 20px; /* Adjust as needed */
+            width: 100%;
+            text-align: center;
+            font-size: 0.875rem; /* text-sm */
+            color: #a0aec0; /* text-gray-400 */
+        }
+
+        /* Roadmap Modal Styles */
+        .roadmap-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Dark overlay */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 200; /* Above welcome page */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .roadmap-modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .roadmap-modal-content {
+            background-color: #2d3748; /* Same as glowing-container */
+            border-radius: 1rem;
+            padding: 2rem;
+            width: 90%;
+            max-width: 800px; /* Max width for readability */
+            max-height: 90vh; /* Max height for scrollability */
+            overflow-y: auto; /* Scroll for long content */
+            position: relative;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .roadmap-modal-overlay.visible .roadmap-modal-content {
+            transform: scale(1);
+        }
+
+        .roadmap-modal-close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #e2e8f0;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .roadmap-modal-close-btn:hover {
+            color: #fbbf24;
+        }
+
+        .roadmap-modal-header {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fbbf24;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .roadmap-modal-body h1, .roadmap-modal-body h2, .roadmap-modal-body h3 {
+            color: #fbbf24;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-weight: bold;
+        }
+        .roadmap-modal-body h1 { font-size: 1.8rem; }
+        .roadmap-modal-body h2 { font-size: 1.5rem; }
+        .roadmap-modal-body h3 { font-size: 1.25rem; }
+
+        .roadmap-modal-body ul, .roadmap-modal-body ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .roadmap-modal-body li {
+            margin-bottom: 0.5rem;
+        }
+        .roadmap-modal-body p {
+            margin-bottom: 1rem;
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #fbbf24;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        .loading-spinner.active {
+            display: block;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Welcome Page -->
+    <div id="welcome-page">
+        <h1 class="welcome-title text-center mb-6">Welcome to Pathfinder Pro!</h1>
+        <p class="text-xl text-gray-300 text-center max-w-2xl px-4">
+            Your journey to unparalleled success begins here.
+            Discover the ultimate roadmap to achieve your aspirations, meticulously crafted just for you.
+        </p>
+        <button id="enterSiteButton" class="welcome-button">
+            Get Started
+        </button>
+        <div class="welcome-creator-name">
+            Created by <span class="text-gray-300 font-semibold">Neeraj Verma</span>
+        </div>
+    </div>
+
+    <!-- Main Content (Initially Hidden) -->
+    <div id="main-content" class="w-full h-full flex justify-center items-center">
+        <div class="glowing-container w-full max-w-4xl p-8 sm:p-10 md:p-12 space-y-8 text-center">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-golden-highlight leading-tight animate-fade-in-up" style="animation-delay: 0.4s;">
+                Explore Your Tech Journey
+            </h1>
+            <h2 class="text-xl sm:text-2xl text-gray-300 animate-fade-in-up" style="animation-delay: 0.6s;">
+                Generate Roadmaps for Every Path
+            </h2>
+            <p class="text-gray-400 text-base sm:text-lg leading-relaxed animate-fade-in-up" style="animation-delay: 0.8s;">
+                Enter your name and choose your desired tech field or programming language below to instantly generate a comprehensive roadmap tailored for a dynamic study approach.
+            </p>
+
+            <!-- User Name Input -->
+            <div class="animate-fade-in-up" style="animation-delay: 0.9s;">
+                <label for="userNameInput" class="sr-only">Your Name</label>
+                <input
+                    type="text"
+                    id="userNameInput"
+                    name="user_name"
+                    placeholder="Enter Your Name (Optional)"
+                    class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-200"
+                >
+            </div>
+
+            <!-- Roadmap Categories Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up" style="animation-delay: 1s;">
+                <!-- Web Development (Frontend) -->
+                <div class="roadmap-card" data-roadmap-type="Frontend Web Development">
+                    <span class="roadmap-card-icon">💻</span>
+                    <span class="roadmap-card-title">Frontend Web Dev</span>
+                    <p class="text-gray-400 text-sm mt-1">HTML, CSS, JavaScript, React/Vue</p>
+                </div>
+
+                <!-- Web Development (Backend) -->
+                <div class="roadmap-card" data-roadmap-type="Backend Web Development">
+                    <span class="roadmap-card-icon">⚙️</span>
+                    <span class="roadmap-card-title">Backend Web Dev</span>
+                    <p class="text-gray-400 text-sm mt-1">Node.js, Python, Databases, APIs</p>
+                </div>
+
+                <!-- Mobile Development -->
+                <div class="roadmap-card" data-roadmap-type="Mobile Development">
+                    <span class="roadmap-card-icon">📱</span>
+                    <span class="roadmap-card-title">Mobile Development</span>
+                    <p class="text-gray-400 text-sm mt-1">iOS (Swift), Android (Kotlin/Java), React Native</p>
+                </div>
+
+                <!-- Data Science & ML -->
+                <div class="roadmap-card" data-roadmap-type="Data Science & Machine Learning">
+                    <span class="roadmap-card-icon">📊</span>
+                    <span class="roadmap-card-title">Data Science & ML</span>
+                    <p class="text-gray-400 text-sm mt-1">Python, Statistics, Machine Learning, AI</p>
+                </div>
+
+                <!-- Cloud Computing -->
+                <div class="roadmap-card" data-roadmap-type="Cloud Computing">
+                    <span class="roadmap-card-icon">☁️</span>
+                    <span class="roadmap-card-title">Cloud Computing</span>
+                    <p class="text-gray-400 text-sm mt-1">AWS, Azure, Google Cloud, Serverless</p>
+                </div>
+
+                <!-- Cybersecurity -->
+                <div class="roadmap-card" data-roadmap-type="Cybersecurity">
+                    <span class="roadmap-card-icon">🔒</span>
+                    <span class="roadmap-card-title">Cybersecurity</span>
+                    <p class="text-gray-400 text-sm mt-1">Network Security, Ethical Hacking, GRC</p>
+                </div>
+
+                <!-- Python Programming -->
+                <div class="roadmap-card" data-roadmap-type="Python Programming">
+                    <span class="roadmap-card-icon">🐍</span>
+                    <span class="roadmap-card-title">Python Programming</span>
+                    <p class="text-gray-400 text-sm mt-1">Fundamentals, OOP, Libraries, Frameworks</p>
+                </div>
+
+                <!-- JavaScript Programming -->
+                <div class="roadmap-card" data-roadmap-type="JavaScript Programming">
+                    <span class="roadmap-card-icon">📜</span>
+                    <span class="roadmap-card-title">JavaScript Programming</span>
+                    <p class="text-gray-400 text-sm mt-1">Core Concepts, ES6+, Asynchronous JS</p>
+                </div>
+
+                <!-- Java Programming -->
+                <div class="roadmap-card" data-roadmap-type="Java Programming">
+                    <span class="roadmap-card-icon">☕</span>
+                    <span class="roadmap-card-title">Java Programming</span>
+                    <p class="text-gray-400 text-sm mt-1">Core Java, Spring Boot, Android Dev</p>
+                </div>
+            </div>
+
+            <!-- About Me Section -->
+            <div class="mt-8 pt-4 border-t border-gray-700">
+                <button id="toggleAboutMe" class="text-yellow-400 hover:text-yellow-300 transition duration-200 text-sm focus:outline-none">
+                    Learn More About the Creator
+                </button>
+                <div id="aboutMeContent" class="about-me-content mt-4 text-gray-300 text-sm text-left">
+                    <p>Hello! I'm <span class="font-bold text-white">Neeraj Verma</span>, the creator behind this initiative. My passion lies in empowering individuals to achieve their goals, whether it's acing technical interviews, mastering new skills, or navigating complex career paths.</p>
+                    <p class="mt-2">This platform is a culmination of insights and strategies that have proven successful in navigating the competitive tech landscape and beyond. I believe in sharing knowledge to foster collective growth and unlock potential.</p>
+                    <p class="mt-2">Join me on this journey to supercharge your success!</p>
+                </div>
+            </div>
+
+            <!-- Creator Name -->
+            <div class="mt-6 text-xs text-gray-500">
+                Created by <span class="text-gray-400 font-semibold">Neeraj Verma</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Roadmap Modal Overlay -->
+    <div id="roadmapModalOverlay" class="roadmap-modal-overlay">
+        <div class="roadmap-modal-content">
+            <button id="closeRoadmapModal" class="roadmap-modal-close-btn">&times;</button>
+            <h2 id="modalRoadmapTitle" class="roadmap-modal-header"></h2>
+            <div class="loading-spinner" id="modalLoadingSpinner"></div>
+            <p id="modalRoadmapMessage" class="text-gray-400 text-center mb-4"></p>
+            <div id="modalGeneratedRoadmapContent" class="roadmap-modal-body text-gray-200">
+                <!-- Generated roadmap will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const welcomePage = document.getElementById('welcome-page');
+        const mainContent = document.getElementById('main-content');
+        const enterSiteButton = document.getElementById('enterSiteButton');
+        const toggleAboutMeButton = document.getElementById('toggleAboutMe');
+        const aboutMeContent = document.getElementById('aboutMeContent');
+        const roadmapCards = document.querySelectorAll('.roadmap-card');
+        const userNameInput = document.getElementById('userNameInput');
+
+        // Modal elements
+        const roadmapModalOverlay = document.getElementById('roadmapModalOverlay');
+        const closeRoadmapModalButton = document.getElementById('closeRoadmapModal');
+        const modalRoadmapTitle = document.getElementById('modalRoadmapTitle');
+        const modalLoadingSpinner = document.getElementById('modalLoadingSpinner');
+        const modalRoadmapMessage = document.getElementById('modalRoadmapMessage');
+        const modalGeneratedRoadmapContent = document.getElementById('modalGeneratedRoadmapContent');
+
+        // Event listener for the "Get Started" button on the welcome page
+        enterSiteButton.addEventListener('click', function() {
+            welcomePage.classList.add('hidden'); // Hide welcome page
+            mainContent.classList.add('visible'); // Show main content
+        });
+
+        // Toggle About Me section
+        toggleAboutMeButton.addEventListener('click', function() {
+            aboutMeContent.classList.toggle('open');
+            if (aboutMeContent.classList.contains('open')) {
+                toggleAboutMeButton.textContent = 'Hide About the Creator';
+            } else {
+                toggleAboutMeButton.textContent = 'Learn More About the Creator';
+            }
+        });
+
+        // Close roadmap modal
+        closeRoadmapModalButton.addEventListener('click', function() {
+            roadmapModalOverlay.classList.remove('visible');
+            // Clear modal content when closed
+            modalRoadmapTitle.textContent = '';
+            modalGeneratedRoadmapContent.innerHTML = '';
+            modalRoadmapMessage.textContent = '';
+        });
+
+        // Function to call Gemini API for roadmap generation
+        async function generateRoadmap(roadmapType, userName) {
+            roadmapModalOverlay.classList.add('visible'); // Show the modal overlay
+            modalRoadmapTitle.textContent = `${roadmapType} Roadmap`; // Set modal title
+            modalLoadingSpinner.classList.add('active'); // Show spinner in modal
+            modalRoadmapMessage.textContent = `Generating your "${roadmapType}" roadmap...`;
+            modalGeneratedRoadmapContent.innerHTML = ''; // Clear previous content
+
+            const personalizedText = userName ? ` for ${userName}` : '';
+            const prompt = `Generate a detailed, dynamic study roadmap for "${roadmapType}". Include sections like 'Fundamentals', 'Intermediate Concepts', 'Advanced Topics', 'Projects', and 'Key Resources'. Ensure the roadmap is comprehensive and actionable. This roadmap is generated for you${personalizedText}.`;
+
+            let chatHistory = [];
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+            const payload = { contents: chatHistory };
+            const apiKey = ""; // Canvas will automatically provide the API key at runtime
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                // Check if the response was successful (status 2xx)
+                if (!response.ok) {
+                    const errorText = await response.text(); // Read raw text for debugging
+                    console.error('API Error:', response.status, response.statusText, errorText);
+                    modalRoadmapMessage.textContent = `Error: Failed to generate roadmap. Status: ${response.status}. Please try again.`;
+                    modalGeneratedRoadmapContent.innerHTML = '';
+                    modalLoadingSpinner.classList.remove('active');
+                    return; // Exit function early
+                }
+
+                const result = await response.json(); // Attempt to parse JSON
+
+                modalLoadingSpinner.classList.remove('active'); // Hide spinner
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    modalGeneratedRoadmapContent.innerHTML = formatMarkdownToHtml(text); // Format Markdown to HTML
+                    modalRoadmapMessage.textContent = ''; // Clear message
+                } else {
+                    modalRoadmapMessage.textContent = 'Could not generate the roadmap. The API response was empty or malformed.';
+                    modalGeneratedRoadmapContent.innerHTML = '';
+                }
+            } catch (error) {
+                console.error('Error calling Gemini API:', error);
+                modalLoadingSpinner.classList.remove('active'); // Hide spinner
+                modalRoadmapMessage.textContent = 'An error occurred while generating the roadmap. Please check your network connection or try again later.';
+                modalGeneratedRoadmapContent.innerHTML = '';
+            }
+        }
+
+        // Add event listeners to roadmap cards
+        roadmapCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const roadmapType = this.dataset.roadmapType;
+                const userName = userNameInput.value.trim(); // Get user name from input
+                generateRoadmap(roadmapType, userName);
+            });
+        });
+
+        // Basic Markdown to HTML conversion for displaying LLM output
+        function formatMarkdownToHtml(markdown) {
+            let html = markdown
+                .replace(/^### (.*$)/gim, '<h3>$1</h3>') // H3
+                .replace(/^## (.*$)/gim, '<h2>$1</h2>')   // H2
+                .replace(/^# (.*$)/gim, '<h1>$1</h1>')    // H1
+                .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>') // Bold
+                .replace(/\*(.*?)\*/gim, '<em>$1</em>') // Italic
+                .replace(/`(.*?)`/gim, '<code>$1</code>') // Inline code
+                .replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2" target="_blank" class="text-blue-400 hover:underline">$1</a>'); // Links
+
+            // Process lists and paragraphs more carefully to avoid issues with <br>
+            let lines = html.split('\n');
+            let formattedLines = [];
+            let inList = false;
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (line.match(/^\d+\.\s/) || line.match(/^[\*\-]\s/)) { // Check for ordered or unordered list item
+                    if (!inList) {
+                        formattedLines.push(line.match(/^\d+\.\s/) ? '<ol class="list-decimal list-inside ml-4">' : '<ul class="list-disc list-inside ml-4">');
+                        inList = true;
+                    }
+                    formattedLines.push(`<li>${line.substring(line.indexOf(' ') + 1)}</li>`);
+                } else {
+                    if (inList) {
+                        formattedLines.push(line.match(/^\d+\.\s/) ? '</ol>' : '</ul>');
+                        inList = false;
+                    }
+                    if (line) { // Only add if line is not empty after trim
+                        formattedLines.push(`<p>${line}</p>`);
+                    }
+                }
+            });
+            if (inList) { // Close any open list at the end
+                formattedLines.push(lines[lines.length - 1].match(/^\d+\.\s/) ? '</ol>' : '</ul>');
+            }
+
+            return formattedLines.join('');
+        }
+    </script>
+</body>
+</html>
