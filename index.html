@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pathfinder Pro - Dynamic Tech Roadmaps & Resume Builder</title> <!-- Updated Website Name -->
+    <title>Pathfinder Pro - Dynamic Tech Roadmaps & Resume Builder</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts - Inter -->
@@ -11,52 +11,45 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #1a202c, #2d3748, #1a202c); /* Subtle gradient background */
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite; /* Animated background */
-            color: #e2e8f0; /* Equivalent to text-gray-200 */
+            /* Solid dark background for simplicity */
+            background-color: #1a1a1a;
+            color: #f0f0f0; /* Lighter text for dark background */
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 20px; /* Add some padding for smaller screens */
-            box-sizing: border-box; /* Ensure padding doesn't cause overflow */
-            overflow-x: hidden; /* Prevent horizontal scroll on animations */
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-x: hidden;
         }
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Custom glow effect for the card container */
+        /* Custom glow effect for the card container - softened */
         .glowing-container {
             position: relative;
-            background-color: #2d3748; /* Equivalent to bg-gray-800 */
-            border-radius: 1rem; /* Equivalent to rounded-xl */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Default shadow */
-            overflow: hidden; /* Important for containing the pseudo-element glow */
+            background-color: #222222; /* Darker base for cards */
+            border-radius: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Softer shadow */
+            overflow: hidden;
             opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInCard 1s ease-out forwards;
-            animation-delay: 0.2s; /* Delay card animation slightly */
-            width: 100%; /* Ensure it takes full width of max-w-4xl */
+            transform: translateY(10px); /* Less dramatic entrance */
+            animation: fadeInCard 0.8s ease-out forwards; /* Faster, simpler fade-in */
+            animation-delay: 0.2s;
+            width: 100%;
         }
 
         .glowing-container::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg at 50% 50%, #fbbf24 0%, #fcd34d 20%, transparent 50%, transparent 100%); /* Golden gradient */
-            animation: rotate 8s linear infinite;
-            opacity: 0.3; /* Subtle glow */
-            filter: blur(40px); /* Soften the glow */
-            z-index: -1; /* Place behind content */
+            top: -20%; /* Smaller area for glow */
+            left: -20%;
+            width: 140%;
+            height: 140%;
+            background: conic-gradient(from 0deg at 50% 50%, #ff1493 0%, #ff69b4 20%, transparent 50%, transparent 100%); /* Pink gradient */
+            animation: rotate 12s linear infinite; /* Slower rotation */
+            opacity: 0.2; /* Much more subtle glow */
+            filter: blur(30px); /* Less blur */
+            z-index: -1;
         }
 
         .glowing-container::after {
@@ -66,14 +59,14 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #2d3748; /* Re-apply background to mask glow over content */
+            background-color: #222222; /* Re-apply background to mask glow over content */
             border-radius: 1rem;
-            z-index: 0; /* Place above the glow, below content */
+            z-index: 0;
         }
 
         .glowing-container > * {
             position: relative;
-            z-index: 1; /* Ensure content is above the glow and mask */
+            z-index: 1;
         }
 
         @keyframes rotate {
@@ -85,55 +78,55 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Entrance animations for content elements */
+        /* Entrance animations for content elements - simplified */
         .animate-fade-in-up {
             opacity: 0;
-            transform: translateY(10px);
-            animation: fadeInUp 0.8s ease-out forwards;
+            transform: translateY(5px); /* Smaller lift */
+            animation: fadeInUp 0.6s ease-out forwards; /* Faster, simpler fade-in */
         }
 
         @keyframes fadeInUp {
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Golden highlight for heading */
-        .text-golden-highlight {
-            color: #fbbf24; /* A nice golden yellow */
+        /* Vibrant highlight color - used as accent */
+        .text-vibrant-highlight {
+            color: #ff1493; /* Deep Pink */
         }
 
-        /* Roadmap Card Styling */
+        /* Roadmap Card Styling - softened */
         .roadmap-card, .resume-save-card {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 1.5rem;
-            background-color: #374151; /* Darker gray for cards */
-            border-radius: 0.75rem; /* Rounded corners */
+            background-color: #333333;
+            border-radius: 0.75rem;
             text-align: center;
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            border: 1px solid transparent; /* For hover effect */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); /* Softer shadow */
+            border: 1px solid transparent;
         }
 
         .roadmap-card:hover, .resume-save-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            background-color: #4a5568; /* Slightly lighter on hover */
-            border-color: #fbbf24; /* Golden border on hover */
+            transform: translateY(-3px); /* Less pronounced lift */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.5); /* Softer hover shadow */
+            background-color: #444444;
+            border-color: #ff1493; /* Pink border on hover */
         }
 
         .roadmap-card-icon {
-            font-size: 2.5rem; /* Large icon size */
+            font-size: 2.5rem;
             margin-bottom: 0.75rem;
-            color: #fbbf24; /* Golden icon color */
+            color: #ff1493; /* Pink icon color */
         }
 
         .roadmap-card-title {
             font-weight: bold;
-            font-size: 1.125rem; /* lg text */
-            color: #e2e8f0;
+            font-size: 1.125rem;
+            color: #f0f0f0;
         }
 
         /* About Me section styling */
@@ -145,102 +138,117 @@
         }
 
         .about-me-content.open {
-            max-height: 300px; /* Adjust based on content height */
+            max-height: 300px;
             opacity: 1;
         }
 
-        /* Welcome Page Specific Styles */
+        /* Welcome Page Specific Styles - simplified animations */
         #welcome-page {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #1a202c, #2d3748, #1a202c);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
+            background-color: #1a1a1a; /* Solid dark background */
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 100; /* Ensure it's on top */
+            z-index: 100;
             opacity: 1;
-            transition: opacity 0.8s ease-out;
-            padding-bottom: 60px; /* Add padding for creator name at bottom */
+            transition: opacity 0.6s ease-out; /* Faster fade out */
+            padding-bottom: 60px;
             box-sizing: border-box;
         }
 
         #welcome-page.hidden {
             opacity: 0;
-            pointer-events: none; /* Disable interactions when hidden */
+            pointer-events: none;
         }
 
         #main-content {
-            display: none; /* Hidden by default */
+            display: none;
             opacity: 0;
-            transition: opacity 0.8s ease-out;
-            flex-direction: column; /* Changed to column for navigation */
-            align-items: center; /* Center content horizontally */
-            width: 100%; /* Take full width */
+            transition: opacity 0.6s ease-out; /* Faster fade in */
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
         }
 
         #main-content.visible {
-            display: flex; /* Or block, depending on layout */
+            display: flex;
             opacity: 1;
         }
 
         .welcome-title {
-            font-size: 3rem; /* Larger for welcome */
+            font-size: 3.5rem;
             font-weight: bold;
-            color: #fbbf24;
-            text-shadow: 0 0 15px rgba(251, 191, 36, 0.5); /* Subtle glow */
-            animation: pulse 2s infinite alternate; /* Pulsing effect */
+            color: #ff1493; /* Deep Pink */
+            text-shadow: 0 0 10px rgba(255, 20, 147, 0.5); /* Softer glow */
+            animation: fadeIn 1s ease-out forwards; /* Simple fade-in */
+            animation-delay: 0.3s;
         }
 
-        @keyframes pulse {
-            from { transform: scale(1); }
-            to { transform: scale(1.05); }
+        .welcome-description {
+            font-size: 1.25rem;
+            color: #ccc;
+            text-align: center;
+            max-width: 600px;
+            margin-top: 1rem;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards; /* Simple fade-in */
+            animation-delay: 0.8s;
         }
 
         .welcome-button {
-            margin-top: 40px;
-            padding: 15px 40px;
-            font-size: 1.5rem;
-            background-color: #fbbf24;
-            color: #1a202c;
-            border-radius: 9999px; /* Fully rounded */
+            margin-top: 50px;
+            padding: 18px 45px;
+            font-size: 1.6rem;
+            background-color: #ff1493; /* Deep Pink */
+            color: #1a1a1a;
+            border-radius: 9999px;
             font-weight: bold;
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            box-shadow: 0 5px 15px rgba(251, 191, 36, 0.3);
+            box-shadow: 0 5px 15px rgba(255, 20, 147, 0.4);
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards; /* Simple fade-in */
+            animation-delay: 1.3s;
         }
 
         .welcome-button:hover {
-            background-color: #fcd34d;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(251, 191, 36, 0.5);
+            background-color: #ff69b4;
+            transform: translateY(-3px); /* Less pronounced lift */
+            box-shadow: 0 8px 20px rgba(255, 20, 147, 0.6);
         }
 
         .welcome-creator-name {
             position: absolute;
-            bottom: 20px; /* Adjust as needed */
+            bottom: 20px;
             width: 100%;
             text-align: center;
-            font-size: 0.875rem; /* text-sm */
-            color: #a0aec0; /* text-gray-400 */
+            font-size: 0.875rem;
+            color: #999;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards; /* Simple fade-in */
+            animation-delay: 1.8s;
         }
 
-        /* Roadmap Modal Styles */
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Roadmap Modal Styles - softened */
         .roadmap-modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7); /* Dark overlay */
+            background-color: rgba(0, 0, 0, 0.7); /* Slightly less opaque */
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 200; /* Above welcome page */
+            z-index: 200;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -252,16 +260,16 @@
         }
 
         .roadmap-modal-content {
-            background-color: #2d3748; /* Same as glowing-container */
+            background-color: #222222;
             border-radius: 1rem;
             padding: 2rem;
             width: 90%;
-            max-width: 800px; /* Max width for readability */
-            max-height: 90vh; /* Max height for scrollability */
-            overflow-y: auto; /* Scroll for long content */
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
             position: relative;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
-            transform: scale(0.9);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); /* Softer shadow */
+            transform: scale(0.95); /* Less dramatic scale */
             transition: transform 0.3s ease;
         }
 
@@ -275,26 +283,26 @@
             right: 1rem;
             background: none;
             border: none;
-            font-size: 1.5rem;
-            color: #e2e8f0;
+            font-size: 1.8rem;
+            color: #f0f0f0;
             cursor: pointer;
             transition: color 0.2s ease;
         }
 
         .roadmap-modal-close-btn:hover {
-            color: #fbbf24;
+            color: #ff1493;
         }
 
         .roadmap-modal-header {
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: bold;
-            color: #fbbf24;
+            color: #ff1493;
             margin-bottom: 1.5rem;
             text-align: center;
         }
 
         .roadmap-modal-body h1, .roadmap-modal-body h2, .roadmap-modal-body h3 {
-            color: #fbbf24;
+            color: #ff1493;
             margin-top: 1.5rem;
             margin-bottom: 0.75rem;
             font-weight: bold;
@@ -306,17 +314,19 @@
         .roadmap-modal-body ul, .roadmap-modal-body ol {
             margin-left: 1.5rem;
             margin-bottom: 1rem;
+            color: #e0e0e0;
         }
         .roadmap-modal-body li {
             margin-bottom: 0.5rem;
         }
         .roadmap-modal-body p {
             margin-bottom: 1rem;
+            color: #e0e0e0;
         }
 
         .loading-spinner {
             border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid #fbbf24;
+            border-top: 4px solid #ff1493;
             border-radius: 50%;
             width: 30px;
             height: 30px;
@@ -340,27 +350,29 @@
             justify-content: center;
             margin-bottom: 2rem;
             width: 100%;
-            max-width: 4xl; /* Match glowing-container width */
+            max-width: 4xl;
         }
 
         .nav-tab {
-            background-color: #374151;
-            color: #e2e8f0;
+            background-color: #333333;
+            color: #f0f0f0;
             padding: 0.75rem 1.5rem;
             border-radius: 0.5rem;
             cursor: pointer;
             transition: background-color 0.2s ease, color 0.2s ease;
             font-weight: bold;
             margin: 0 0.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .nav-tab:hover {
-            background-color: #4a5568;
+            background-color: #444444;
         }
 
         .nav-tab.active {
-            background-color: #fbbf24;
-            color: #1a202c;
+            background-color: #ff1493;
+            color: #1a1a1a;
+            box-shadow: 0 4px 8px rgba(255, 20, 147, 0.4);
         }
 
         /* Section visibility */
@@ -375,7 +387,7 @@
 
         /* Resume List Styling */
         .resume-list-item {
-            background-color: #374151;
+            background-color: #333333;
             padding: 1rem;
             border-radius: 0.5rem;
             margin-bottom: 0.75rem;
@@ -383,20 +395,28 @@
             justify-content: space-between;
             align-items: center;
             transition: background-color 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         .resume-list-item:hover {
-            background-color: #4a5568;
+            background-color: #444444;
         }
         .resume-list-item button {
-            background-color: #ef4444; /* Red for delete */
+            background-color: #dc2626; /* Red for delete */
             color: white;
             padding: 0.5rem 1rem;
             border-radius: 0.375rem;
             font-size: 0.875rem;
             transition: background-color 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         .resume-list-item button:hover {
-            background-color: #dc2626;
+            background-color: #b91c1c;
+        }
+        .resume-list-item .view-resume-btn {
+             background-color: #ff1493; /* Pink for view */
+        }
+        .resume-list-item .view-resume-btn:hover {
+             background-color: #ff69b4;
         }
     </style>
 </head>
@@ -405,7 +425,7 @@
     <!-- Welcome Page -->
     <div id="welcome-page">
         <h1 class="welcome-title text-center mb-6">Welcome to Pathfinder Pro!</h1>
-        <p class="text-xl text-gray-300 text-center max-w-2xl px-4">
+        <p class="welcome-description max-w-2xl px-4">
             Your journey to unparalleled success begins here.
             Discover the ultimate roadmap to achieve your aspirations, meticulously crafted just for you.
         </p>
@@ -427,7 +447,7 @@
 
         <!-- Roadmap Section -->
         <div id="roadmapSection" class="glowing-container p-8 sm:p-10 md:p-12 space-y-8 text-center content-section active">
-            <h1 class="text-4xl sm:text-5xl font-extrabold text-golden-highlight leading-tight animate-fade-in-up" style="animation-delay: 0.4s;">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-vibrant-highlight leading-tight animate-fade-in-up" style="animation-delay: 0.4s;">
                 Explore Your Tech Journey
             </h1>
             <h2 class="text-xl sm:text-2xl text-gray-300 animate-fade-in-up" style="animation-delay: 0.6s;">
@@ -445,7 +465,7 @@
                     id="userNameInput"
                     name="user_name"
                     placeholder="Enter Your Name (Optional)"
-                    class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-200"
+                    class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-200"
                 >
             </div>
 
@@ -518,7 +538,7 @@
 
         <!-- Resume Builder Section -->
         <div id="resumeSection" class="glowing-container p-8 sm:p-10 md:p-12 space-y-8 text-center content-section">
-            <h1 class="text-4xl sm:text-5xl font-extrabold text-golden-highlight leading-tight">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-vibrant-highlight leading-tight">
                 Build Your Professional Resume
             </h1>
             <h2 class="text-xl sm:text-2xl text-gray-300">
@@ -531,21 +551,21 @@
             <div class="space-y-4 text-left">
                 <div>
                     <label for="resumeName" class="block text-gray-300 text-sm font-bold mb-2">Your Full Name:</label>
-                    <input type="text" id="resumeName" placeholder="e.g., John Doe" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-200">
+                    <input type="text" id="resumeName" placeholder="e.g., John Doe" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-200">
                 </div>
                 <div>
                     <label for="desiredRole" class="block text-gray-300 text-sm font-bold mb-2">Desired Role:</label>
-                    <input type="text" id="desiredRole" placeholder="e.g., Software Engineer" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-200">
+                    <input type="text" id="desiredRole" placeholder="e.g., Software Engineer" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-200">
                 </div>
                 <div>
                     <label for="keySkills" class="block text-gray-300 text-sm font-bold mb-2">Key Skills (comma-separated):</label>
-                    <input type="text" id="keySkills" placeholder="e.g., Python, JavaScript, AWS, React" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-200">
+                    <input type="text" id="keySkills" placeholder="e.g., Python, JavaScript, AWS, React" class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-200">
                 </div>
                 <div>
                     <label for="experienceSummary" class="block text-gray-300 text-sm font-bold mb-2">Experience Summary:</label>
-                    <textarea id="experienceSummary" rows="4" placeholder="Briefly describe your work experience and achievements." class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-200"></textarea>
+                    <textarea id="experienceSummary" rows="4" placeholder="Briefly describe your work experience and achievements." class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 transition duration-200"></textarea>
                 </div>
-                <button id="generateResumeButton" class="w-full p-3 rounded-md text-lg sm:text-xl font-bold bg-yellow-500 text-gray-900 hover:bg-yellow-400 transition duration-200">
+                <button id="generateResumeButton" class="w-full p-3 rounded-md text-lg sm:text-xl font-bold bg-pink-600 text-white hover:bg-pink-500 transition duration-200">
                     Generate Resume
                 </button>
             </div>
@@ -562,7 +582,7 @@
             </div>
 
             <div class="mt-8 pt-4 border-t border-gray-700 text-left">
-                <h3 class="text-xl font-bold text-golden-highlight mb-4">My Saved Resumes</h3>
+                <h3 class="text-xl font-bold text-vibrant-highlight mb-4">My Saved Resumes</h3>
                 <div id="savedResumesList">
                     <!-- Saved resumes will be listed here -->
                     <p class="text-gray-400" id="noResumesMessage">No resumes saved yet.</p>
@@ -571,9 +591,9 @@
         </div>
 
         <!-- About Me Section -->
-        <div class="glowing-container w-full max-w-4xl p-8 sm:p-10 md:p-12 space-y-8 text-center mt-8">
+        <div class="glowing-container p-8 sm:p-10 md:p-12 space-y-8 text-center mt-8">
             <div class="pt-4 border-t border-gray-700">
-                <button id="toggleAboutMe" class="text-yellow-400 hover:text-yellow-300 transition duration-200 text-sm focus:outline-none">
+                <button id="toggleAboutMe" class="text-vibrant-highlight hover:text-pink-400 transition duration-200 text-sm focus:outline-none">
                     Learn More About the Creator
                 </button>
                 <div id="aboutMeContent" class="about-me-content mt-4 text-gray-300 text-sm text-left">
@@ -922,7 +942,7 @@
                     listItem.innerHTML = `
                         <span class="text-white font-semibold">${resume.title}</span>
                         <div>
-                            <button data-id="${resume.id}" class="view-resume-btn bg-blue-600 hover:bg-blue-500 mr-2">View</button>
+                            <button data-id="${resume.id}" class="view-resume-btn bg-pink-600 hover:bg-pink-500 mr-2">View</button>
                             <button data-id="${resume.id}" class="delete-resume-btn bg-red-600 hover:bg-red-500">Delete</button>
                         </div>
                     `;
